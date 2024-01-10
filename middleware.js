@@ -89,6 +89,7 @@ function noop (_req, _res, next) {
 module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) => {
   function predicate (req) {
     let u = url.parse(req.url, true)
+    console.log("checking:", u, allow(req, u))
     // Not a git request, skip
     return allow(req, u)
   }
@@ -103,6 +104,7 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
   }
   function middleware (req, res, next) {
     let u = url.parse(req.url, true)
+    console.log("")
     console.log("got request to ", req.url, req.method, u)
 
     let headers = {}
