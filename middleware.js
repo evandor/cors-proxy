@@ -113,8 +113,12 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
     let headers = {}
     for (let h of allowHeaders) {
       if (req.headers[h]) {
-        console.log(" > setting request header", h, req.headers[h])
-        headers[h] = req.headers[h]
+        if (h !== 'authorization') {
+          console.log(" > setting request header", h, req.headers[h])
+          headers[h] = req.headers[h]
+        } else {
+          console.log(" > omitting request header", h, req.headers[h])
+        }
       }
     }
     if (req.headers['authorization']) {
