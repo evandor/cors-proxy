@@ -89,7 +89,7 @@ function noop (_req, _res, next) {
 module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) => {
   function predicate (req) {
     let u = url.parse(req.url, true)
-    console.log("checking:", u, allow(req, u))
+    //console.log("checking:", u, allow(req, u))
     // Not a git request, skip
     return allow(req, u)
   }
@@ -111,7 +111,7 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
     let headers = {}
     for (let h of allowHeaders) {
       if (req.headers[h]) {
-        console.log(" > setting header", h, req.headers[h])
+        console.log(" > setting request header", h, req.headers[h])
         headers[h] = req.headers[h]
       }
     }
@@ -153,7 +153,7 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
       for (let h of exposeHeaders) {
         if (h === 'content-length') continue
         if (f.headers.has(h)) {
-            console.log("  fetched; setting header", h, f.headers.get(h))
+            console.log("  fetched; setting response header", h, f.headers.get(h))
             res.setHeader(h, f.headers.get(h))
         }
       }
