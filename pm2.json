@@ -1,0 +1,9 @@
+{
+  "apps": [
+    {
+      "name": "git.tabsets.net",
+      "script": "npm",
+      "args" : "start"
+    }
+  ]
+}
