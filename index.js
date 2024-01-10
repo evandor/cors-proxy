@@ -16,7 +16,7 @@ async function service (req, res) {
       <html>
         <title>git.tabsets.net</title>
         <h1>git.tabsets.net</h1>
-        <p>running...</p>
+        <p>runing...</p>
       </html>
       `
       return send(res, 400, html)
