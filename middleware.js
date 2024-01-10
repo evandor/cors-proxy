@@ -143,6 +143,7 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
         body: (req.method !== 'GET' && req.method !== 'HEAD') ? req : undefined
       }
     ).then(f => {
+      console.log("got answer", f)
       if (f.headers.has('location')) {
         console.log("  fetched; got location ", f.headers.get('location'))
         // Modify the location so the client continues to use the proxy
