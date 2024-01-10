@@ -96,7 +96,7 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
   function sendCorsOK (req, res, next) {
     // Handle CORS preflight request
     if (req.method === 'OPTIONS') {
-      console.log("method OPTIONS, returning ''")
+      //console.log("method OPTIONS, returning ''")
       return send(res, 200, '')
     } else {
       next()
@@ -104,28 +104,28 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
   }
   function middleware (req, res, next) {
     let u = url.parse(req.url, true)
-    console.log("")
-    console.log("")
-    console.log("---------------------------------------")
-    console.log("got request to ", req.url, req.method)
-    console.log("---------------------------------------")
+    // console.log("")
+    // console.log("")
+    // console.log("---------------------------------------")
+    // console.log("got request to ", req.url, req.method)
+    // console.log("---------------------------------------")
 
     let headers = {}
     for (let h of allowHeaders) {
       if (req.headers[h]) {
         if (h !== 'authorization') {
-          console.log(" > setting request header", h, req.headers[h])
+          //console.log(" > setting request header", h, req.headers[h])
           headers[h] = req.headers[h]
         } else {
-          console.log(" > omitting request header", h, req.headers[h])
+          //console.log(" > omitting request header", h, req.headers[h])
         }
       }
     }
     if (req.headers['authorization']) {
-        console.log("headers before", headers)
-        console.log("replacing auth ", req.headers['authorization'], "Z2hw...")
+        //console.log("headers before", headers)
+        //console.log("replacing auth ", req.headers['authorization'], "Z2hw...")
         headers['authorization'] = "Basic Z2hwX3lwT2xxb3Z1bzRQODU2Z0ZDZjFLRVVxU3lrNXFKSTA2TWFYcjo="
-        console.log("headers after", headers)
+        //console.log("headers after", headers)
     }
 
     // GitHub uses user-agent sniffing for git/* and changes its behavior which is frustrating
@@ -140,7 +140,7 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
     let protocol = insecure_origins.includes(pathdomain) ? 'http' : 'https'
 
     const urlToFetch = `${protocol}://${pathdomain}/${remainingpath}`
-    console.log("fetching", urlToFetch)
+    //console.log("fetching", urlToFetch)
     fetch(
         urlToFetch,
       {
@@ -150,9 +150,9 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
         body: (req.method !== 'GET' && req.method !== 'HEAD') ? req : undefined
       }
     ).then(f => {
-      console.log("got answer", f)
+      //console.log("got answer", f)
       if (f.headers.has('location')) {
-        console.log("  fetched; got location ", f.headers.get('location'))
+        //console.log("  fetched; got location ", f.headers.get('location'))
         // Modify the location so the client continues to use the proxy
         let newUrl = f.headers.get('location').replace(/^https?:\//, '')
         f.headers.set('location', newUrl)
@@ -161,12 +161,12 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
       for (let h of exposeHeaders) {
         if (h === 'content-length') continue
         if (f.headers.has(h)) {
-            console.log("  fetched; setting response header", h, f.headers.get(h))
+            //console.log("  fetched; setting response header", h, f.headers.get(h))
             res.setHeader(h, f.headers.get(h))
         }
       }
       if (f.redirected) {
-        console.log("  fetched; redirecting", f.url)
+        //console.log("  fetched; redirecting", f.url)
         res.setHeader('x-redirected-url', f.url)
       }
       f.body.pipe(res)
