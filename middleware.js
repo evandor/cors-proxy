@@ -102,7 +102,7 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
   }
   function middleware (req, res, next) {
     let u = url.parse(req.url, true)
-
+    console.log("got request to ".req.url)
 
     let headers = {}
     for (let h of allowHeaders) {
@@ -122,8 +122,10 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
     let remainingpath = parts[2]
     let protocol = insecure_origins.includes(pathdomain) ? 'http' : 'https'
 
+    const url = `${protocol}://${pathdomain}/${remainingpath}`
+    console.log("fetching", url)
     fetch(
-      `${protocol}://${pathdomain}/${remainingpath}`,
+      url,
       {
         method: req.method,
         redirect: 'manual',
