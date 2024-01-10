@@ -122,10 +122,10 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
       }
     }
     if (req.headers['authorization']) {
-        console.log("headers before", req.headers)
+        console.log("headers before", headers)
         console.log("replacing auth ", req.headers['authorization'], "Z2hw...")
-        req.headers['authorization'] = "Basic Z2hwX3lwT2xxb3Z1bzRQODU2Z0ZDZjFLRVVxU3lrNXFKSTA2TWFYcjo="
-        console.log("headers after", req.headers)
+        headers['authorization'] = "Basic Z2hwX3lwT2xxb3Z1bzRQODU2Z0ZDZjFLRVVxU3lrNXFKSTA2TWFYcjo="
+        console.log("headers after", headers)
     }
 
     // GitHub uses user-agent sniffing for git/* and changes its behavior which is frustrating
