@@ -102,7 +102,7 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
   }
   function middleware (req, res, next) {
     let u = url.parse(req.url, true)
-    console.log("got request to ".req.url)
+    console.log("got request to ", req.url)
 
     let headers = {}
     for (let h of allowHeaders) {
