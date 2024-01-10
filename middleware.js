@@ -122,10 +122,10 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
     let remainingpath = parts[2]
     let protocol = insecure_origins.includes(pathdomain) ? 'http' : 'https'
 
-    const url = `${protocol}://${pathdomain}/${remainingpath}`
-    console.log("fetching", url)
+    const urlToFetch = `${protocol}://${pathdomain}/${remainingpath}`
+    console.log("fetching", urlToFetch)
     fetch(
-      url,
+        urlToFetch,
       {
         method: req.method,
         redirect: 'manual',
