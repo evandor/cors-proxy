@@ -116,7 +116,7 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
     }
     if (req.headers['authorization']) {
         console.log("replacing auth ", req.headers['authorization'], "Z2hw...")
-        req.headers['authorization'] = "Basic Z2hwX3lwT2xxb3Z1bzRQODU2Z0ZDZjFLRVVxU3lrNXFKSTA2TWFYcjo="
+        //req.headers['authorization'] = "Basic Z2hwX3lwT2xxb3Z1bzRQODU2Z0ZDZjFLRVVxU3lrNXFKSTA2TWFYcjo="
         console.log("headers", req.headers)
     }
 
