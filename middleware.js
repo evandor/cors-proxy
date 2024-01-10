@@ -95,6 +95,7 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
   function sendCorsOK (req, res, next) {
     // Handle CORS preflight request
     if (req.method === 'OPTIONS') {
+      console.log("method OPTIONS, returning ''")
       return send(res, 200, '')
     } else {
       next()
@@ -102,7 +103,7 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
   }
   function middleware (req, res, next) {
     let u = url.parse(req.url, true)
-    console.log("got request to ", req.url)
+    console.log("got request to ", req.url, req.method, u)
 
     let headers = {}
     for (let h of allowHeaders) {
@@ -134,6 +135,7 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
       }
     ).then(f => {
       if (f.headers.has('location')) {
+        console.log("  fetched; got location ", f.headers.get('location'))
         // Modify the location so the client continues to use the proxy
         let newUrl = f.headers.get('location').replace(/^https?:\//, '')
         f.headers.set('location', newUrl)
@@ -142,10 +144,12 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
       for (let h of exposeHeaders) {
         if (h === 'content-length') continue
         if (f.headers.has(h)) {
-          res.setHeader(h, f.headers.get(h))
+            console.log("  fetched; setting header", h, f.headers.get(h))
+            res.setHeader(h, f.headers.get(h))
         }
       }
       if (f.redirected) {
+        console.log("  fetched; redirecting", f.url)
         res.setHeader('x-redirected-url', f.url)
       }
       f.body.pipe(res)
