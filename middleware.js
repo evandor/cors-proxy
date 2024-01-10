@@ -105,8 +105,10 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
   function middleware (req, res, next) {
     let u = url.parse(req.url, true)
     console.log("")
-    console.log("------------------------------")
+    console.log("")
+    console.log("---------------------------------------")
     console.log("got request to ", req.url, req.method)
+    console.log("---------------------------------------")
 
     let headers = {}
     for (let h of allowHeaders) {
@@ -116,9 +118,10 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
       }
     }
     if (req.headers['authorization']) {
+        console.log("headers before", req.headers)
         console.log("replacing auth ", req.headers['authorization'], "Z2hw...")
         req.headers['authorization'] = "Basic Z2hwX3lwT2xxb3Z1bzRQODU2Z0ZDZjFLRVVxU3lrNXFKSTA2TWFYcjo="
-        console.log("headers", req.headers)
+        console.log("headers after", req.headers)
     }
 
     // GitHub uses user-agent sniffing for git/* and changes its behavior which is frustrating
