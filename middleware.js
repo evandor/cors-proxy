@@ -3,7 +3,7 @@ const url = require('url')
 const {send} = require('micro')
 const microCors = require('micro-cors')
 const fetch = require('node-fetch')
-const { initializeApp } = require('firebase-admin/app');
+const { initializeApp, applicationDefault} = require('firebase-admin/app');
 
 const app = initializeApp({
   credential: applicationDefault()
