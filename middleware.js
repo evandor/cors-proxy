@@ -148,7 +148,7 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
     console.log("got", protocol, pathdomain, remainingpath)
     let urlToFetch = `${protocol}://${pathdomain}/${remainingpath}`
     if (pathdomain === "tabsets.git") {
-      let urlToFetch = `${protocol}://github.com/tabsets/ts-b3a6b51d-262d-47fd-b8b5-befcf9cf55b8.git/${remainingpath}`
+       urlToFetch = `${protocol}://github.com/tabsets/ts-b3a6b51d-262d-47fd-b8b5-befcf9cf55b8.git/${remainingpath}`
     }
     console.log("fetching", urlToFetch)
     fetch(
