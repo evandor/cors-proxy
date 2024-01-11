@@ -3,6 +3,12 @@ const url = require('url')
 const {send} = require('micro')
 const microCors = require('micro-cors')
 const fetch = require('node-fetch')
+const { initializeApp } = require('firebase-admin/app');
+
+const app = initializeApp({
+  credential: applicationDefault()
+  //databaseURL: 'https://<DATABASE_NAME>.firebaseio.com'
+});
 
 const allowHeaders = [
   'accept-encoding',
@@ -106,9 +112,9 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
     let u = url.parse(req.url, true)
     // console.log("")
     // console.log("")
-    // console.log("---------------------------------------")
-    // console.log("got request to ", req.url, req.method)
-    // console.log("---------------------------------------")
+    console.log("---------------------------------------")
+    console.log("got request to ", req.url, req.method)
+    console.log("---------------------------------------")
 
     let headers = {}
     for (let h of allowHeaders) {
@@ -140,7 +146,7 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
     let protocol = insecure_origins.includes(pathdomain) ? 'http' : 'https'
 
     const urlToFetch = `${protocol}://${pathdomain}/${remainingpath}`
-    //console.log("fetching", urlToFetch)
+    console.log("fetching", urlToFetch)
     fetch(
         urlToFetch,
       {
