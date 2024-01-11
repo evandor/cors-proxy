@@ -106,7 +106,7 @@ function doFetch(urlToFetch, req, headers, res, next) {
   // });
   //
   // logtail.flush()
-  logtail.info("fetching url " + urlToFetch, headers)
+  logtail.info("fetching url " + urlToFetch, {headers})
   fetch(
       urlToFetch,
       {
@@ -194,11 +194,11 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
     console.log("got", protocol, pathdomain, remainingpath)
     let urlToFetch = `${protocol}://${pathdomain}/${remainingpath}`
     if (pathdomain === "tabsets.git") {
-      console.log("getting user")
+      logtail.info("substituting user...")
       //const user = getDoc(doc(firestore, "users", "qTj2jrtB0qT6tfwXEvKYKtiVUcw1"))
       const userPromise =  firestore.collection('users').doc('qTj2jrtB0qT6tfwXEvKYKtiVUcw1').get();
       userPromise.then(user => {
-        console.log("user", user.data())
+        //console.log("user", user.data())
         const repo = user.data()['git']['repo']
         const token = user.data()['git']['token']
         console.log("repo", repo)
