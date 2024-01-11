@@ -96,6 +96,42 @@ function noop (_req, _res, next) {
   next()
 }
 
+function doFetch(urlToFetch, req, headers, res, next) {
+  fetch(
+      urlToFetch,
+      {
+        method: req.method,
+        redirect: 'manual',
+        headers,
+        body: (req.method !== 'GET' && req.method !== 'HEAD') ? req : undefined
+      }
+  ).then(f => {
+    //console.log("got answer", f)
+    if (f.headers.has('location')) {
+      //console.log("  fetched; got location ", f.headers.get('location'))
+      // Modify the location so the client continues to use the proxy
+      let newUrl = f.headers.get('location').replace(/^https?:\//, '')
+      f.headers.set('location', newUrl)
+    }
+    res.statusCode = f.status
+    for (let h of exposeHeaders) {
+      if (h === 'content-length') continue
+      if (f.headers.has(h)) {
+        //console.log("  fetched; setting response header", h, f.headers.get(h))
+        res.setHeader(h, f.headers.get(h))
+      }
+    }
+    if (f.redirected) {
+      //console.log("  fetched; redirecting", f.url)
+      res.setHeader('x-redirected-url', f.url)
+    }
+    f.body.pipe(res)
+  }).catch(e => {
+    console.error(e);
+    next();
+  });
+}
+
 module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) => {
   function predicate (req) {
     let u = url.parse(req.url, true)
@@ -154,44 +190,16 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
     if (pathdomain === "tabsets.git") {
       console.log("getting user")
       //const user = getDoc(doc(firestore, "users", "qTj2jrtB0qT6tfwXEvKYKtiVUcw1"))
-      const user =  firestore.collection('users').doc('qTj2jrtB0qT6tfwXEvKYKtiVUcw1');
-      console.log("user", user)
-      urlToFetch = `${protocol}://github.com/tabsets/ts-b3a6b51d-262d-47fd-b8b5-befcf9cf55b8.git/${remainingpath}`
+      const userPromise =  firestore.collection('users').doc('qTj2jrtB0qT6tfwXEvKYKtiVUcw1').get();
+      userPromise.then(user => {
+        console.log("user", user.data())
+        urlToFetch = `${protocol}://github.com/tabsets/ts-b3a6b51d-262d-47fd-b8b5-befcf9cf55b8.git/${remainingpath}`
+        doFetch(urlToFetch, req, headers, res, next);
+      })
+    } else {
+      console.log("fetching", urlToFetch)
+      doFetch(urlToFetch, req, headers, res, next);
     }
-    console.log("fetching", urlToFetch)
-    fetch(
-        urlToFetch,
-      {
-        method: req.method,
-        redirect: 'manual',
-        headers,
-        body: (req.method !== 'GET' && req.method !== 'HEAD') ? req : undefined
-      }
-    ).then(f => {
-      //console.log("got answer", f)
-      if (f.headers.has('location')) {
-        //console.log("  fetched; got location ", f.headers.get('location'))
-        // Modify the location so the client continues to use the proxy
-        let newUrl = f.headers.get('location').replace(/^https?:\//, '')
-        f.headers.set('location', newUrl)
-      }
-      res.statusCode = f.status
-      for (let h of exposeHeaders) {
-        if (h === 'content-length') continue
-        if (f.headers.has(h)) {
-            //console.log("  fetched; setting response header", h, f.headers.get(h))
-            res.setHeader(h, f.headers.get(h))
-        }
-      }
-      if (f.redirected) {
-        //console.log("  fetched; redirecting", f.url)
-        res.setHeader('x-redirected-url', f.url)
-      }
-      f.body.pipe(res)
-    }).catch(e => {
-      console.error(e);
-      next();
-    });
   }
   const cors = microCors({
     allowHeaders,
