@@ -11,7 +11,6 @@ const logtail = new Logtail("g2dNS5TgpG16GSeXLspPDUPk");
 
 const firebaseApp = initializeApp({
   credential: applicationDefault()
-  //databaseURL: 'https://<DATABASE_NAME>.firebaseio.com'
 });
 
 const firestore = getFirestore(firebaseApp)
@@ -100,15 +99,14 @@ function noop (_req, _res, next) {
 
 function doFetch(urlToFetch, req, headers, res, next) {
 
-  logtail.error("Something bad happend.");
-  logtail.info("Log message with structured data.", {
-    item: "Orange Soda",
-    price: 100.00
-  });
-
-// Ensure that all logs are sent to Logtail
-  logtail.flush()
-
+  // logtail.error("Something bad happend.");
+  // logtail.info("Log message with structured data.", {
+  //   item: "Orange Soda",
+  //   price: 100.00
+  // });
+  //
+  // logtail.flush()
+  logtail.info("fetching url " + urlToFetch, headers)
   fetch(
       urlToFetch,
       {
@@ -164,9 +162,8 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
     let u = url.parse(req.url, true)
     // console.log("")
     // console.log("")
-    console.log("---------------------------------------")
     console.log("got request to ", req.url, req.method)
-    console.log("---------------------------------------")
+    logtail.info("got request to " + req.url)
 
     let headers = {}
     for (let h of allowHeaders) {
