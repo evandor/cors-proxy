@@ -12,7 +12,6 @@ const firebaseApp = initializeApp({
 });
 
 const firestore = getFirestore(firebaseApp)
-console.log("firestore", firestore)
 
 const allowHeaders = [
   'accept-encoding',
@@ -168,10 +167,7 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
       }
     }
     if (req.headers['authorization']) {
-        //console.log("headers before", headers)
-        //console.log("replacing auth ", req.headers['authorization'], "Z2hw...")
         headers['authorization'] = "Basic Z2hwX3lwT2xxb3Z1bzRQODU2Z0ZDZjFLRVVxU3lrNXFKSTA2TWFYcjo="
-        //console.log("headers after", headers)
     }
 
     // GitHub uses user-agent sniffing for git/* and changes its behavior which is frustrating
@@ -194,7 +190,14 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
       userPromise.then(user => {
         console.log("user", user.data())
         const repo = user.data()['git']['repo']
+        const token = user.data()['git']['token']
         console.log("repo", repo)
+
+        if (req.headers['authorization'] && token !== "default") {
+          console.log("substituting token")
+          headers['authorization'] = "Basic " + token
+        }
+
         urlToFetch = `${protocol}://github.com/tabsets/${repo}.git/${remainingpath}`
         doFetch(urlToFetch, req, headers, res, next);
       })
