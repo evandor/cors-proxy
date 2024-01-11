@@ -4,11 +4,14 @@ const {send} = require('micro')
 const microCors = require('micro-cors')
 const fetch = require('node-fetch')
 const { initializeApp, applicationDefault} = require('firebase-admin/app');
+const {getFirestore, doc, getDoc} = require("firebase-admin/firestore");
 
-const app = initializeApp({
+const firebaseApp = initializeApp({
   credential: applicationDefault()
   //databaseURL: 'https://<DATABASE_NAME>.firebaseio.com'
 });
+
+const firestore = getFirestore(firebaseApp)
 
 const allowHeaders = [
   'accept-encoding',
@@ -148,7 +151,10 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
     console.log("got", protocol, pathdomain, remainingpath)
     let urlToFetch = `${protocol}://${pathdomain}/${remainingpath}`
     if (pathdomain === "tabsets.git") {
-       urlToFetch = `${protocol}://github.com/tabsets/ts-b3a6b51d-262d-47fd-b8b5-befcf9cf55b8.git/${remainingpath}`
+      console.log("getting user")
+      const user = getDoc(doc("users", "qTj2jrtB0qT6tfwXEvKYKtiVUcw1"))
+      console.log("user", user)
+      urlToFetch = `${protocol}://github.com/tabsets/ts-b3a6b51d-262d-47fd-b8b5-befcf9cf55b8.git/${remainingpath}`
     }
     console.log("fetching", urlToFetch)
     fetch(
