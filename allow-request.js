@@ -7,7 +7,10 @@ function isInfoRefs (req, u) {
 }
 
 function isPreflightPull (req, u) {
-  return req.method === 'OPTIONS' && req.headers['access-control-request-headers'].includes('content-type') && u.pathname.endsWith('git-upload-pack')
+  return req.method === 'OPTIONS' &&
+      req.headers['access-control-request-headers'] !== undefined &&
+      req.headers['access-control-request-headers'].includes('content-type')
+      && u.pathname.endsWith('git-upload-pack')
 }
 
 function isPull (req, u) {
