@@ -153,7 +153,8 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
     let urlToFetch = `${protocol}://${pathdomain}/${remainingpath}`
     if (pathdomain === "tabsets.git") {
       console.log("getting user")
-      const user = getDoc(doc(firestore, "users", "qTj2jrtB0qT6tfwXEvKYKtiVUcw1"))
+      //const user = getDoc(doc(firestore, "users", "qTj2jrtB0qT6tfwXEvKYKtiVUcw1"))
+      const user =  firestore.collection('users').doc('qTj2jrtB0qT6tfwXEvKYKtiVUcw1');
       console.log("user", user)
       urlToFetch = `${protocol}://github.com/tabsets/ts-b3a6b51d-262d-47fd-b8b5-befcf9cf55b8.git/${remainingpath}`
     }
