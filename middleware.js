@@ -195,6 +195,11 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
     let urlToFetch = `${protocol}://${pathdomain}/${remainingpath}`
     if (pathdomain === "tabsets.git") {
       logtail.info("substituting user...")
+      const pathSplit = remainingpath.split("/")
+      const userId = pathSplit[0].split(":")[0]
+      console.log("got userid", userId)
+      remainingpath = pathSplit.slice(1).join('/');
+      console.log("got remainingpath", remainingpath)
       //const user = getDoc(doc(firestore, "users", "qTj2jrtB0qT6tfwXEvKYKtiVUcw1"))
       const userPromise =  firestore.collection('users').doc('qTj2jrtB0qT6tfwXEvKYKtiVUcw1').get();
       userPromise.then(user => {
