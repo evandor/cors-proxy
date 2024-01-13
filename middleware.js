@@ -201,7 +201,7 @@ module.exports = ({ origin, insecure_origins = [], authorization = noop } = {}) 
       remainingpath = pathSplit.slice(1).join('/');
       console.log("got remainingpath", remainingpath)
       //const user = getDoc(doc(firestore, "users", "qTj2jrtB0qT6tfwXEvKYKtiVUcw1"))
-      const userPromise =  firestore.collection('users').doc('qTj2jrtB0qT6tfwXEvKYKtiVUcw1').get();
+      const userPromise =  firestore.collection('users').doc(userId).get();
       userPromise.then(user => {
         //console.log("user", user.data())
         const repo = user.data()['git']['repo']
